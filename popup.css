@@ -1,0 +1,120 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-image: url("assets/Images/azaan2.avif");
+    min-width: 620px;
+    min-height: 310px;
+}
+
+.main,
+.clock {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+    margin-bottom: 2em;
+}
+
+.english,
+.arabic {
+    display: inline-block;
+}
+
+.english {
+    font-family: 'Signika Negative', sans-serif;
+    font-size: 1.5rem;
+    color: rgb(67, 40, 82);
+    border-right: .1em solid rgb(67, 40, 82);
+    padding: .7em;
+    text-align: center;  
+}
+.arabic {
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: rgb(67, 40, 82);
+    padding: .5em;
+    text-align: center;
+}
+
+.english h1 {
+    padding: 0;
+    margin: 0;
+    margin-bottom: .1em;
+}
+
+.arabic h1 {
+    padding-bottom: 0;
+    padding-top: 0.33em;
+    margin: 0;
+}
+
+#nextPrayerEN , #nextPrayerAR{
+    color: rgb(45, 0, 56);
+}
+.clock {
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 3rem;
+    font-weight: 600;
+    color: rgb(67, 40, 82);
+}
+
+
+.footer{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    
+}
+.menu{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: .5em;
+    padding-right: .5em;
+}
+
+label{
+    font-family: 'Signika Negative', sans-serif;
+    font-size: 1.5rem;
+    color: rgb(67, 40, 82);
+    font-weight: 600x;
+    padding-right: .2em;
+}
+select{
+    font-family: 'Signika Negative', sans-serif;
+    font-size: 1rem;
+    color: rgb(67, 40, 82);
+    border: .12em solid rgb(67, 40, 82); 
+    border-radius: .4em;   
+}
+
+.hide{
+    display: none;
+}
+.afterPrayer{
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: rgb(67, 40, 82);
+    line-height: 2em;
+    text-align: center;
+    margin-top: .4em;
+    overflow: auto;
+    transition: 1s ;
+}
+.afterPrayer h2 span{
+    color: rgb(45, 0, 56);
+    border: .12em solid rgb(67, 40, 82);
+    border-radius: .4em;
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    border: 0.12em solid rgb(67, 40, 82);
+    
+}

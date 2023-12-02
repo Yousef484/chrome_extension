@@ -1,0 +1,5 @@
+1- fix the width and heghit of the popup file 
+2- add more audios 
+3- try to remove the host-permission on manifest.json
+4- try to seperate GetLocation function on a file 
+5- check if the alarm is already exists as he done on the video 

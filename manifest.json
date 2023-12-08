@@ -1,26 +1,24 @@
-{
-    "manifest_version":3,
-    "name":"Muazzien",
-    "description":"This Extension Is Made For Muslims To Help Them Know The Prayer Time",
-    "version":"1.0",
-    "action":{
-        "default_popup":"popup.html"
-    },
-    "icons":{
-       "16":"Assets/Images/mosque.png"
-    },
-    "background":{
-        "service_worker":"background.js",
-        "type":"module"
-    },
-    "permissions":[
-        "storage",
-        "geolocation"
-         ,"alarms"
-    ],
+    {
+        "manifest_version":3,
+        "name":"Muazzien",
+        "description":"This Extension Is Made For Muslims To Help Them Know The Prayer Time",
+        "version":"1.0",
+        "action":{
+            "default_popup":"popup.html"
+        },
+        "icons":{
+        "16":"Assets/Images/mosque.png"
+        },
+        "background":{
+            "service_worker":"background.js",
+            "type":"module"
+        },
+        "permissions":[
+            "storage",
+            "geolocation",
+            "alarms",
+            "offscreen"
+        ]
+        
     
-     
-    "host_permissions": ["http://*/*", "https://*/*"]
-    
-   
-}
+    }

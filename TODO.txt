@@ -1,5 +1,9 @@
-1- fix the width and heghit of the popup file 
-2- add more audios 
-3- try to remove the host-permission on manifest.json
-4- try to seperate GetLocation function on a file 
-5- check if the alarm is already exists as he done on the video 
+- fix the width and heghit of the popup2 file 
+- add more audios 
+- save the audio value on the local-storage
+- handle the fajr part at popup2
+- handle the geolocation not supported page
+- consider removing the azaan and doaa from popup.html --->
+- fix button appearance when the prayer comes more than once
+- add shourk time
+- every thing is running good but you should refector the code and make every thing clean so you can add more features

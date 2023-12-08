@@ -68,8 +68,8 @@ body {
 
 .footer{
     display: flex;
-    flex-direction: column;
-    align-items: end;
+    flex-direction: row;
+    justify-content: space-between;
     
 }
 .menu{
@@ -118,3 +118,31 @@ select{
     border: 0.12em solid rgb(67, 40, 82);
     
 }
+
+
+  
+  #closeAudioButton {
+    
+    background-color:rgb(67, 40, 82); 
+    color: #fff;
+    padding: 9px;
+    cursor: pointer;
+    margin-bottom: .5em;
+    padding-right: .5em;
+    font-family: 'Signika Negative', sans-serif;
+    font-size: 1rem;
+    transition: background-color 0.3s  ease-in-out;
+    border-radius: .2em;
+    border-style: none;   
+  }
+  
+  #closeAudioButton:hover {
+    background-color: rgb(153, 5, 5);
+    color:white;
+    font-family: 'Signika Negative', sans-serif;
+    font-size: 1rem;
+    font-weight: 600; 
+    border-style: none;
+   
+  }
+  

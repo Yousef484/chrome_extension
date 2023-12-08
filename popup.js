@@ -1,34 +1,20 @@
+import GetLocation from "./APIs/fetchingUserLocation.js";
+
 const prayersEN = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 const prayersAR = ["الفجر", "الظهر", "العصر", "المغرب", "العشاء"];
-const audioElement = document.querySelector("#prayerCall");
 const nextPrayerEN = document.querySelector('#nextPrayerEN');
 const nextPrayerAR = document.querySelector('#nextPrayerAR');
 const clock = document.querySelector("#clck");
-const beforePrayer = document.querySelector(".beforePrayer");
-const afterPrayer = document.querySelector(".afterPrayer");
+// const beforePrayer = document.querySelector(".beforePrayer");
+// const afterPrayer = document.querySelector(".afterPrayer");
 const fajrSpan = document.querySelector("#fajrSpan");
 const selectElement = document.querySelector("#audios");
+const closeAudioButton = document.querySelector("#closeAudioButton");
 let installedMessageSent = false;
-let getLocationCalled = false;
 let prayerTimesPtr;
+let timeOfPrayers;
+let getLocationCalled =false;
 
-function GetLocation() {
-    if ("geolocation" in navigator) {
-        navigator.geolocation.watchPosition(
-            function (position) {
-                lat = position.coords.latitude;
-                lng = position.coords.longitude;
-                const loc = { latt: lat, lngg: lng };
-                chrome.runtime.sendMessage({ location: loc });
-            },
-            function (error) {
-                console.log(error.message);
-            }
-        );
-    } else {
-        console.log("Geolocation is not supported by this browser!!!");
-    }
-}
 
 (() => {
     if (!installedMessageSent) {
@@ -37,76 +23,70 @@ function GetLocation() {
     }
 })();
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
     if (request.firstMessage && !getLocationCalled) {
         getLocationCalled = true;
-        GetLocation();
+        const loc = await GetLocation();
+        chrome.runtime.sendMessage({ location: loc });
         chrome.runtime.onMessage.removeListener(arguments.callee);
     }
 });
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    
-    if(request.alarm)
+
+
+chrome.runtime.onMessage.addListener(function (request) {    
+    // if (request.alarm) {
+    //     closeAudioButton.classList.remove("hide")
+    //     CallForThePrayer();
+    //  }
+    if (request.test)
     {
+        closeAudioButton.classList.remove("hide")
         CallForThePrayer();
-    }
-        //---/ I SHOULD SEND THE PRAYERTIMES TO ACSSESS THE TIME OF THE PRAYER TO DISPLY IT -----\
-     else if (request.ptr ==-1)
-      {
+    }  
+    else if (request.Data.ptr == -1) {
         nextPrayerEN.innerText = prayersEN[0]
         nextPrayerAR.innerText = prayersAR[0]
-        //clock.innerText = prayerTimes.data[now.getDate()].timings.Fajr.replace("(EET)", " ")
-      }
-      else if (request.ptr >-1){
-      prayerTimesPtr = request.ptr;   
-      nextPrayerEN.innerText = prayersEN[prayerTimesPtr]
-      nextPrayerAR.innerText = prayersAR[prayerTimesPtr]
-      //clock.innerText = timesStrings[prayerTimesPtr].replace("(EET)", " ")
-      }
-    
-    
+        clock.innerText = timeOfPrayers[0].replace("(EET)", " ")
+    }
+    else if (request.Data.ptr > -1) {
+        prayerTimesPtr = request.Data.ptr;
+        timeOfPrayers = request.Data.prayerTimes;
+        nextPrayerEN.innerText = prayersEN[prayerTimesPtr]
+        nextPrayerAR.innerText = prayersAR[prayerTimesPtr]
+        clock.innerText = timeOfPrayers[prayerTimesPtr].replace("(EET)", " ")
+    }
 });
 
 
 function CallForThePrayer() {
-    if (prayerTimesPtr == 0)
-        fajrSpan.classList.remove("hide")
-
-    CheckAudios();
+    // if (prayerTimesPtr == 0)
+    //     fajrSpan.classList.remove("hide")
 
     prayerTimesPtr++;
     if (prayerTimesPtr == 5) {
         prayerTimesPtr = 0
-        // clearInterval(interval);
     }
-    hideContent();
-    audioElement.play()
-    setTimeout(hideContent, 240000);
-    fajrSpan.classList.add("hide")
+    chrome.runtime.sendMessage({timesPtr: prayerTimesPtr});
+    // hideContent();
+    // setTimeout(hideContent, 240000);
+    
+    // fajrSpan.classList.add("hide")
     nextPrayerEN.innerText = prayersEN[prayerTimesPtr]
     nextPrayerAR.innerText = prayersAR[prayerTimesPtr]
-    // clock.innerText = timesStrings[prayerTimesPtr].replace("(EET)", " ")
+    clock.innerText = timeOfPrayers[prayerTimesPtr].replace("(EET)", " ")
 }
 
 
+// function hideContent() {
+//     beforePrayer.classList.toggle("hide");
+//     afterPrayer.classList.toggle("hide");
+// }
 
 
+closeAudioButton.addEventListener("click", function () {
+    closeAudioButton.classList.add("hide");
+   chrome.runtime.sendMessage({close:true});
+});
 
-
-function hideContent() {
-    beforePrayer.classList.toggle("hide");
-    afterPrayer.classList.toggle("hide");
-}
-
-function CheckAudios() {
-    if (selectElement.value == "audio2") {
-        if (prayerTimesPtr == 0)
-            audioElement.src = "abdelbassetFajr.mp3";
-        else
-            audioElement.src = "abdelbasset.mp3";
-    } else
-        audioElement.src = "azaanNasser.mp3";
-}
-
-
+ 

@@ -1,7 +1,7 @@
 import DataFetching from "./APIs/fetchingData.js";
 
 const currentDate = new Date();
-let prayerTimes, times, timesPtr=-1;
+let prayerTimes, times, timesPtr=-1, isPlaying = false;
 let Data ={}
 
 chrome.runtime.onMessage.addListener(async function (request) {
@@ -9,21 +9,26 @@ chrome.runtime.onMessage.addListener(async function (request) {
         try {
             prayerTimes = await DataFetching(request.location.latt, request.location.lngg);
             getNextPrayerTime();
+            Data.selectedAudio = request.selectedAudio
 
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     } 
     else if (request.installed) {
-        chrome.runtime.sendMessage({ firstMessage: true });
+        
+        chrome.runtime.sendMessage({ firstMessage: true, playing:isPlaying });
     }
     else if (request.timesPtr)
      timesPtr = request.timesPtr;
-    else if (request.close){
-        // you should get here the audio number too and the popup should send it too
+    else if (request.close || request.selectedAudio!= Data.selectedAudio){
+        Data.selectedAudio = request.selectedAudio
+        console.log("here in the ifff")
         Data.close =true;
-    chrome.runtime.sendMessage({data:Data});
+        chrome.runtime.sendMessage({data:Data});
     }
+    else if (request.off)
+     isPlaying = false;
 });
 
 
@@ -123,11 +128,6 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 
 
 
-
-
-
-
-
      /*============TESTING PERPOSES===============*/ 
 
 chrome.alarms.create('openPopupAlarm', { delayInMinutes: 1 });
@@ -148,9 +148,12 @@ chrome.alarms.onAlarm.addListener(function(alam) {
             },()=>{
             Data.ptr = timesPtr;
             Data.close = false;
+            console.log("this Is DATA:", Data)
             chrome.runtime.sendMessage({data:Data});
             });
+     isPlaying = true;
     chrome.runtime.sendMessage({ test: true });
+    
   }
 });
 

@@ -2,12 +2,11 @@ const audioElement = document.querySelector("#prayerCall");
 
 chrome.runtime.onMessage.addListener(function(request) {
     if (request) {
-        CheckAudios("audio1",request.data.ptr, request.data.close )
+        CheckAudios(request.data.selectedAudio,request.data.ptr, request.data.close )
      }  
     });
 
 function CheckAudios(value, prayerPtr, close) {
-    console.log("this is check audio")
     if (value == "audio2") {
         if (prayerPtr == 0 )
             audioElement.src = "Assets/Audios/abdelbassetFajr.mp3";
@@ -18,7 +17,10 @@ function CheckAudios(value, prayerPtr, close) {
      
     if (!close)
    audioElement.play();
-else 
- audioElement.pause();    
+else{ 
+    chrome.runtime.sendMessage({ off: true });
+    audioElement.pause();
+    audioElement.currentTime = 0;
+}    
 }
 

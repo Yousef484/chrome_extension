@@ -1,4 +1,6 @@
 - add more audios 
 - handle the geolocation not supported page
+- on friday you should make the next prayer gomaa not duhr-->
+  before setting the innerText check with if condition if the day is friday and the ptr == 2 then change it to gomaa
 - fix button appearance when the prayer comes more than once
 - every thing is running good but you should refector the code and make every thing clean so you can add more features

@@ -21,6 +21,5 @@ else{
     chrome.runtime.sendMessage({ off: true });
     audioElement.pause();
     audioElement.currentTime = 0;
-}    
-}
+}}
 

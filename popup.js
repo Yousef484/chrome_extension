@@ -7,9 +7,6 @@ const AR_header = document.querySelector("#AR-header")
 const nextPrayerEN = document.querySelector('#nextPrayerEN');
 const nextPrayerAR = document.querySelector('#nextPrayerAR');
 const clock = document.querySelector("#clck");
-// const beforePrayer = document.querySelector(".beforePrayer");
-// const afterPrayer = document.querySelector(".afterPrayer");
-const fajrSpan = document.querySelector("#fajrSpan");
 const selectElement = document.querySelector("#audios");
 const closeAudioButton = document.querySelector("#closeAudioButton");
 let installedMessageSent = false;
@@ -44,17 +41,18 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
 
 
 chrome.runtime.onMessage.addListener(function (request) {    
-    // if (request.alarm) {
-    //     closeAudioButton.classList.remove("hide")
-    //     CallForThePrayer();
-    //  }
-    if (request.test)
-    {
+    if (request.alarm) {
         closeAudioButton.classList.remove("hide")
         CallForThePrayer();
-    }  
+     }
+    // if (request.test)
+    // {
+    //     closeAudioButton.classList.remove("hide")
+    //     CallForThePrayer();
+    // }  
     else if (request.Data.ptr == -1) {
         timeOfPrayers = request.Data.prayerTimes;
+        console.log(timeOfPrayers)
         nextPrayerEN.innerText = prayersEN[0]
         nextPrayerAR.innerText = prayersAR[0]
         clock.innerText = timeOfPrayers[0].replace("(EET)", " ")
@@ -67,6 +65,7 @@ chrome.runtime.onMessage.addListener(function (request) {
         }
         prayerTimesPtr = request.Data.ptr;
         timeOfPrayers = request.Data.prayerTimes;
+        console.log(timeOfPrayers)
         nextPrayerEN.innerText = prayersEN[prayerTimesPtr]
         nextPrayerAR.innerText = prayersAR[prayerTimesPtr]
         clock.innerText = timeOfPrayers[prayerTimesPtr].replace("(EET)", " ")
@@ -75,18 +74,11 @@ chrome.runtime.onMessage.addListener(function (request) {
 
 
 function CallForThePrayer() {
-    // if (prayerTimesPtr == 0)
-    //     fajrSpan.classList.remove("hide")
-
     prayerTimesPtr++;
     if (prayerTimesPtr == 6) {
         prayerTimesPtr = 0
     }
     chrome.runtime.sendMessage({timesPtr: prayerTimesPtr});
-    // hideContent();
-    // setTimeout(hideContent, 240000);
-    
-    // fajrSpan.classList.add("hide")
     if(prayerTimesPtr ==1)
     {
         EN_header.innerText = ""
@@ -96,12 +88,6 @@ function CallForThePrayer() {
     nextPrayerAR.innerText = prayersAR[prayerTimesPtr];
     clock.innerText = timeOfPrayers[prayerTimesPtr].replace("(EET)", " ")
 }
-
-
-// function hideContent() {
-//     beforePrayer.classList.toggle("hide");
-//     afterPrayer.classList.toggle("hide");
-// }
 
 
 closeAudioButton.addEventListener("click", function () {

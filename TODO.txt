@@ -1,7 +1,4 @@
-- fix the width and heghit of the popup2 file 
 - add more audios 
-- handle the fajr part at popup2
 - handle the geolocation not supported page
 - fix button appearance when the prayer comes more than once
-- add shourk time
 - every thing is running good but you should refector the code and make every thing clean so you can add more features

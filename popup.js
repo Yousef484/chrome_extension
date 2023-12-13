@@ -1,7 +1,9 @@
 import GetLocation from "./APIs/fetchingUserLocation.js";
 
-const prayersEN = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
-const prayersAR = ["الفجر", "الظهر", "العصر", "المغرب", "العشاء"];
+const prayersEN = ["Fajr","Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
+const prayersAR = ["الفجر", "الشروق","الظهر", "العصر", "المغرب", "العشاء"];
+const EN_header = document.querySelector("#EN-header")
+const AR_header = document.querySelector("#AR-header")
 const nextPrayerEN = document.querySelector('#nextPrayerEN');
 const nextPrayerAR = document.querySelector('#nextPrayerAR');
 const clock = document.querySelector("#clck");
@@ -35,6 +37,7 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
         if (selectedAudioo != null)
         selectElement.value = selectedAudioo 
         chrome.runtime.sendMessage({ location: loc , selectedAudio: selectedAudioo});
+        console.log("sending location.....")
         chrome.runtime.onMessage.removeListener(arguments.callee);
     }
 });
@@ -57,6 +60,11 @@ chrome.runtime.onMessage.addListener(function (request) {
         clock.innerText = timeOfPrayers[0].replace("(EET)", " ")
     }
     else if (request.Data.ptr > -1) {
+        if(request.Data.ptr ==1)
+        {
+            EN_header.innerText = "";
+            AR_header.innerText = "";
+        }
         prayerTimesPtr = request.Data.ptr;
         timeOfPrayers = request.Data.prayerTimes;
         nextPrayerEN.innerText = prayersEN[prayerTimesPtr]
@@ -71,7 +79,7 @@ function CallForThePrayer() {
     //     fajrSpan.classList.remove("hide")
 
     prayerTimesPtr++;
-    if (prayerTimesPtr == 5) {
+    if (prayerTimesPtr == 6) {
         prayerTimesPtr = 0
     }
     chrome.runtime.sendMessage({timesPtr: prayerTimesPtr});
@@ -79,8 +87,13 @@ function CallForThePrayer() {
     // setTimeout(hideContent, 240000);
     
     // fajrSpan.classList.add("hide")
-    nextPrayerEN.innerText = prayersEN[prayerTimesPtr]
-    nextPrayerAR.innerText = prayersAR[prayerTimesPtr]
+    if(prayerTimesPtr ==1)
+    {
+        EN_header.innerText = ""
+        AR_header.innerText = ""
+    }
+    nextPrayerEN.innerText = prayersEN[prayerTimesPtr];
+    nextPrayerAR.innerText = prayersAR[prayerTimesPtr];
     clock.innerText = timeOfPrayers[prayerTimesPtr].replace("(EET)", " ")
 }
 
@@ -100,7 +113,6 @@ selectElement.addEventListener("change", function () {
     
     const selectedAudio = selectElement.value;
     localStorage.setItem("selectedAudio", selectedAudio);
-    console.log("this is selectedAudio:", selectedAudio);
     chrome.runtime.sendMessage({selectedAudio : selectElement.value})
 });
 

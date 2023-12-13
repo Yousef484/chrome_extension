@@ -2,7 +2,7 @@ import DataFetching from "./APIs/fetchingData.js";
 
 const currentDate = new Date();
 let prayerTimes, times, timesPtr=-1, isPlaying = false;
-let Data ={}
+let Data ={}, popup;
 
 chrome.runtime.onMessage.addListener(async function (request) {
     if (request.location) {
@@ -23,9 +23,9 @@ chrome.runtime.onMessage.addListener(async function (request) {
      timesPtr = request.timesPtr;
     else if (request.close || request.selectedAudio!= Data.selectedAudio){
         Data.selectedAudio = request.selectedAudio
-        console.log("here in the ifff")
         Data.close =true;
         chrome.runtime.sendMessage({data:Data});
+        chrome.offscreen.closeDocument();
     }
     else if (request.off)
      isPlaying = false;
@@ -35,9 +35,9 @@ chrome.runtime.onMessage.addListener(async function (request) {
 
 function getNextPrayerTime() {
     const day = currentDate.getDate()-1;
-    let timesAsString = [prayerTimes.data[day].timings.Fajr, prayerTimes.data[day].timings.Dhuhr, prayerTimes.data[day].timings.Asr, prayerTimes.data[day].timings.Maghrib, prayerTimes.data[day].timings.Isha];
+    let timesAsString = [prayerTimes.data[day].timings.Fajr,prayerTimes.data[day].timings.Sunrise, prayerTimes.data[day].timings.Dhuhr, prayerTimes.data[day].timings.Asr, prayerTimes.data[day].timings.Maghrib, prayerTimes.data[day].timings.Isha];
     times = parseTimeStringsToDates(timesAsString);
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
         if (new Date().getTime() < times[i].getTime()) {
             timesPtr = i;
             break;
@@ -95,26 +95,33 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
         chrome.runtime.alarms.clearAll();
         schedulePrayerAlarms();
      } 
-    //  else {
+     else {
         
-    //     chrome.windows.create({
-    //         url: "popup2.html",
-    //         type: "popup",
-    //         width: 920,
-    //         height: 530
-    //       });
-    //       chrome.offscreen.createDocument({
-    //             url:chrome.runtime.getURL("offScreen.html"),
-    //             reasons:["AUDIO_PLAYBACK"],
-    //             justification: "justification is required.",
-    //             },()=>{
-    //             Data.ptr = timesPtr;
-    //             Data.close = false;
-    //             chrome.runtime.sendMessage({data:Data});
-    //             });
-    //     chrome.runtime.sendMessage({ alarm: true });
+        if (timesPtr ==0)
+      popup = "popup2_fajr.html"
+    else 
+      popup = "popup2.html"
+    console.log(`this is Ptr:${timesPtr} and this is popup:${popup}`)
+    chrome.windows.create({
+        url: popup,
+        type: "popup",
+        width: 920,
+        height: 530
+      }); 
+      chrome.offscreen.createDocument({
+            url:chrome.runtime.getURL("offScreen.html"),
+            reasons:["AUDIO_PLAYBACK"],
+            justification: "justification is required.",
+            },()=>{
+            Data.ptr = timesPtr;
+            Data.close = false;
+            console.log("this Is DATA:", Data)
+            chrome.runtime.sendMessage({data:Data});
+            });
+     isPlaying = true;
+    chrome.runtime.sendMessage({ test: true });
 
-    // }
+    }
 });
 
 
@@ -130,31 +137,35 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 
      /*============TESTING PERPOSES===============*/ 
 
-chrome.alarms.create('openPopupAlarm', { delayInMinutes: 1 });
+// chrome.alarms.create('openPopupAlarm', { delayInMinutes: 1 });
 
-chrome.alarms.onAlarm.addListener(function(alam) {
-  if (alam.name === 'openPopupAlarm') {
-    console.log('ggggggggggggggggggg')
-    chrome.windows.create({
-        url: "popup2.html",
-        type: "popup",
-        width: 920,
-        height: 530
-      });
-      chrome.offscreen.createDocument({
-            url:chrome.runtime.getURL("offScreen.html"),
-            reasons:["AUDIO_PLAYBACK"],
-            justification: "justification is required.",
-            },()=>{
-            Data.ptr = timesPtr;
-            Data.close = false;
-            console.log("this Is DATA:", Data)
-            chrome.runtime.sendMessage({data:Data});
-            });
-     isPlaying = true;
-    chrome.runtime.sendMessage({ test: true });
+// chrome.alarms.onAlarm.addListener(function(alam) {
+//   if (alam.name === 'openPopupAlarm' && Data.ptr !=1) {
+//     if (timesPtr ==0)
+//       popup = "popup2_fajr.html"
+//     else 
+//       popup = "popup2.html"
+//     console.log(`this is Ptr:${timesPtr} and this is popup:${popup}`)
+//     chrome.windows.create({
+//         url: popup,
+//         type: "popup",
+//         width: 920,
+//         height: 530
+//       }); 
+//       chrome.offscreen.createDocument({
+//             url:chrome.runtime.getURL("offScreen.html"),
+//             reasons:["AUDIO_PLAYBACK"],
+//             justification: "justification is required.",
+//             },()=>{
+//             Data.ptr = timesPtr;
+//             Data.close = false;
+//             console.log("this Is DATA:", Data)
+//             chrome.runtime.sendMessage({data:Data});
+//             });
+//      isPlaying = true;
+//     chrome.runtime.sendMessage({ test: true });
     
-  }
-});
+//   }
+// });
 
  

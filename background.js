@@ -76,8 +76,9 @@ function schedulePrayerAlarms(prayerTimesToday) {
         if (prayerTime > now) {
             const timeDifference = prayerTime - now;
             chrome.alarms.get(prayer,exists=>{
-                if (!exists)
+                if (!exists){
                 chrome.alarms.create(prayer, { when: now.getTime() + timeDifference });
+                }
             })
         }
     });
@@ -101,7 +102,8 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
       popup = "popup2_fajr.html"
     else 
       popup = "popup2.html"
-    console.log(`this is Ptr:${timesPtr} and this is popup:${popup}`)
+    if(timesPtr>-1 && timesPtr!=1){
+    console.log("this is timesPtr", timesPtr)
     chrome.windows.create({
         url: popup,
         type: "popup",
@@ -120,8 +122,8 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
             });
      isPlaying = true;
     chrome.runtime.sendMessage({ test: true });
-
-    }
+    console.log("Sent")
+    }}
 });
 
 

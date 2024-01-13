@@ -34,7 +34,6 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
         if (selectedAudioo != null)
         selectElement.value = selectedAudioo 
         chrome.runtime.sendMessage({ location: loc , selectedAudio: selectedAudioo});
-        console.log("sending location.....")
         chrome.runtime.onMessage.removeListener(arguments.callee);
     }
 });
@@ -52,7 +51,6 @@ chrome.runtime.onMessage.addListener(function (request) {
     // }  
     else if (request.Data.ptr == -1) {
         timeOfPrayers = request.Data.prayerTimes;
-        console.log(timeOfPrayers)
         nextPrayerEN.innerText = prayersEN[0]
         nextPrayerAR.innerText = prayersAR[0]
         clock.innerText = timeOfPrayers[0].replace("(EET)", " ")
@@ -65,7 +63,6 @@ chrome.runtime.onMessage.addListener(function (request) {
         }
         prayerTimesPtr = request.Data.ptr;
         timeOfPrayers = request.Data.prayerTimes;
-        console.log(timeOfPrayers)
         nextPrayerEN.innerText = prayersEN[prayerTimesPtr]
         nextPrayerAR.innerText = prayersAR[prayerTimesPtr]
         clock.innerText = timeOfPrayers[prayerTimesPtr].replace("(EET)", " ")
